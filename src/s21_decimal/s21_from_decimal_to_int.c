@@ -1,30 +1,40 @@
 #include "s21_decimal.h"
 
 int s21_from_decimal_to_int(s21_decimal src, int *dst) {
-    if (!dst) return 1;
-
-    int sign = (src.bits[3] & 0x80000000) ? -1 : 1;
-    int exponent = (src.bits[3] >> 16) & 0xFF;
-
-    unsigned long long value = ((unsigned long long)src.bits[2] < 64) |
-                               ((unsigned long long)src.bits[1] < 32) |
-                               src.bits[0];
-
-    for (int i = 0; i < exponent; i++) {
-        if (value == 0) break;
-        value /= 10;
-    }
-
-    if (sign == 1) {
-        if (value > (unsigned long long)INT_MAX) {
-            return 2;
-        }
+    int status = 0;
+    if (dst == NULL) {
+        status = 1;
     } else {
-        if (value > (unsigned long long)INT_MAX + 1ULL) {
-            return 2;
+        int sign = (src.bits[3] & 0x80000000U) ? -1 : 1;
+        int exponent = (src.bits[3] >> 16) & 0xFF;
+
+        if (exponent > 28) {
+            *dst = 0;
+            status = 0;
+        } else {
+            unsigned long long value = src.bits[0] +
+                                      ((unsigned long long)src.bits[1] << 32) +
+                                      ((unsigned long long)src.bits[2] << 64);
+
+            for (int i = 0; i < exponent; ++i) {
+                if (value == 0ULL) break;
+                value /= 10ULL;
+            }
+
+            if (sign == 1) {
+                if (value > (unsigned long long)INT_MAX) {
+                    status = 2;
+                }
+            } else {
+                if (value > (unsigned long long)INT_MAX + 1ULL) {
+                    status = 2;
+                }
+            }
+
+            if (status == 0) {
+                *dst = (int)((long long)value * sign);
+            }
         }
     }
-
-    *dst = (int)(sign * (long long)value);
-    return 0;
+    return status;
 }
