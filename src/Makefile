@@ -1,58 +1,68 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -std=c11 -g -I.
-GCOV_FLAGS = -fprofile-arcs -ftest-coverage
-LIBS = -lcheck -lsubunit -lm -lpthread -lrt
+CFLAGS = -Wall -Werror -Wextra -std=c11
+TEST_LINK_FLAGS = $(shell pkg-config --cflags --libs check) --coverage -lm
 
 SRC_DIR = s21_decimal
-HELPER_DIR = s21_helper
+OBJ_DIR = obj
+INC_DIR = .
+
+SOURCES = $(wildcard $(SRC_DIR)/*.c)
+HEADERS = $(wildcard $(INC_DIR)/*.h)
+OBJECTS = $(SOURCES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+LIBRARY = s21_decimal.a
+
 TEST_DIR = s21_decimal_test
-BUILD_DIR = build
-COV_REPORT_DIR = gcov_report
+TEST_SOURCES = $(wildcard $(TEST_DIR)/*.c)
+TEST_OBJECTS = $(TEST_SOURCES:$(TEST_DIR)/%.c=$(OBJ_DIR)/test_%.o)
+TEST_BINARY = s21_test
 
-SRC_FILES := $(wildcard $(SRC_DIR)/*.c)
-HELPER_FILES := $(wildcard $(HELPER_DIR)/*.c)
+CFLAGS_COV = $(CFLAGS) --coverage
+OBJECTS_COV = $(SOURCES:$(SRC_DIR)/%.c=$(OBJ_DIR)/cov_%.o)
 
-LIB_OBJS := $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/$(SRC_DIR)/%.o,$(SRC_FILES))
-LIB_OBJS += $(patsubst $(HELPER_DIR)/%.c,$(BUILD_DIR)/$(HELPER_DIR)/%.o,$(HELPER_FILES))
+.PHONY: all clean rebuild format_check format test run_test gcov_report
 
-LIB_GCOV_OBJS := $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/$(SRC_DIR)/%.gcov.o,$(SRC_FILES))
-LIB_GCOV_OBJS += $(patsubst $(HELPER_DIR)/%.c,$(BUILD_DIR)/$(HELPER_DIR)/%.gcov.o,$(HELPER_FILES))
+all: $(LIBRARY)
 
-TEST_SOURCES := $(filter-out $(TEST_DIR)/s21_test_main.c, $(wildcard $(TEST_DIR)/*.c))
-TEST_OBJS := $(patsubst $(TEST_DIR)/%.c,$(BUILD_DIR)/$(TEST_DIR)/%.o,$(TEST_SOURCES))
-TEST_GCOV_OBJS := $(patsubst $(TEST_DIR)/%.c,$(BUILD_DIR)/$(TEST_DIR)/%.gcov.o,$(TEST_SOURCES))
+$(LIBRARY): $(OBJECTS) $(HEADERS)
+	ar rcs $@ $(OBJECTS)
 
-TEST_MAIN := $(TEST_DIR)/s21_test_main.c
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS) | $(OBJ_DIR)
+	$(CC) $(CFLAGS) -I$(INC_DIR) -c $< -o $@
 
-TEST_BIN := $(BUILD_DIR)/tests
-TEST_GCOV_BIN := $(BUILD_DIR)/tests_gcov
+$(OBJ_DIR):
+	mkdir -p $@
 
-.PHONY: all clean test gcov_report
+test: $(TEST_BINARY)
 
-all: test
+$(TEST_BINARY): $(LIBRARY) $(TEST_OBJECTS)
+	$(CC) $(CFLAGS) -I$(INC_DIR) $(TEST_OBJECTS) $(LIBRARY) $(TEST_LINK_FLAGS) -o $@
 
-$(BUILD_DIR)/%.o: %.c s21_decimal.h
-	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o $@
+$(OBJ_DIR)/test_%.o: $(TEST_DIR)/%.c $(HEADERS) | $(OBJ_DIR)
+	$(CC) $(CFLAGS) -I$(INC_DIR) -c $< -o $@
 
-$(BUILD_DIR)/%.gcov.o: %.c s21_decimal.h
-	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(GCOV_FLAGS) -c $< -o $@
+run_test: test
+	./$(TEST_BINARY)
 
-$(TEST_BIN): $(TEST_MAIN) $(TEST_OBJS) $(LIB_OBJS)
-	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
+gcov_report: $(OBJECTS_COV) $(TEST_OBJECTS)
+	$(CC) $(CFLAGS_COV) -I$(INC_DIR) $(OBJECTS_COV) $(TEST_OBJECTS) $(TEST_LINK_FLAGS) -o s21_test_cov
+	./s21_test_cov
+	mkdir -p coverage_report
+	lcov --capture --directory . --output-file coverage_report/coverage.info
+	genhtml coverage_report/coverage.info --output-directory coverage_report
 
-test: $(TEST_BIN)
-	./$(TEST_BIN)
-
-$(TEST_GCOV_BIN): $(TEST_MAIN) $(TEST_GCOV_OBJS) $(LIB_GCOV_OBJS)
-	$(CC) $(CFLAGS) $(GCOV_FLAGS) $^ -o $@ $(LIBS)
-
-gcov_report: $(TEST_GCOV_BIN)
-	./$(TEST_GCOV_BIN)
-	lcov --capture --directory $(BUILD_DIR) --output-file coverage.info -q
-	genhtml coverage.info --output-directory $(COV_REPORT_DIR)
-	@echo "Coverage report: $(COV_REPORT_DIR)/index.html"
+$(OBJ_DIR)/cov_%.o: $(SRC_DIR)/%.c $(HEADERS) | $(OBJ_DIR)
+	$(CC) $(CFLAGS_COV) -I$(INC_DIR) -c $< -o $@
 
 clean:
-	rm -rf $(BUILD_DIR) coverage.info $(COV_REPORT_DIR)
+	rm -rf $(LIBRARY) $(OBJ_DIR) $(TEST_BINARY) coverage_report s21_test_cov
+
+rebuild: clean all
+
+format_check:
+	clang-format -n --style=file:../materials/linters/.clang-format $(INC_DIR)/*.h
+	clang-format -n --style=file:../materials/linters/.clang-format $(SRC_DIR)/*.c
+
+format:
+	clang-format -i --style=file:../materials/linters/.clang-format $(INC_DIR)/*.h
+	clang-format -i --style=file:../materials/linters/.clang-format $(SRC_DIR)/*.c
+

@@ -1,5 +1,6 @@
 #ifndef S21_DECIMAL_H
 #define S21_DECIMAL_H
+
 #include <stdint.h>
 
 #define DECIMAL_SIGN_MASK 0x80000000
@@ -49,5 +50,11 @@ void set_sign(s21_decimal* value, int sign);
 int get_scale(s21_decimal value);
 void set_scale(s21_decimal* value, int scale);
 int is_zero(s21_decimal value);
+void decimal_to_big(big_decimal* big, s21_decimal value);
+int big_to_decimal(big_decimal big, s21_decimal* result);
+void align_scales(big_decimal* value1, big_decimal* value2);
+void add_big_decimals(big_decimal value1, big_decimal value2, big_decimal* result);
+void sub_big_decimals(big_decimal value1, big_decimal value2, big_decimal* result);
+int compare_big_decimals(big_decimal value1, big_decimal value2);
 
-#endif // S21_DECIMAL_H
+#endif
