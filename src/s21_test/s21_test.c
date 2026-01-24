@@ -130,8 +130,6 @@ START_TEST(test_float_null_pointer) {
 }
 END_TEST
 
-// === Suites ===
-
 Suite *conversion_suite(void) {
     Suite *s = suite_create("Conversion");
     TCase *tc_int = tcase_create("to_int");
@@ -156,8 +154,6 @@ Suite *conversion_suite(void) {
     suite_add_tcase(s, tc_float);
     return s;
 }
-
-// === Main ===
 
 int main(void) {
     Suite *s = conversion_suite();
