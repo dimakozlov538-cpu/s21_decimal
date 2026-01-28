@@ -50,3 +50,19 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# Binaries and objects
+s21_decimal.a
+s21_test
+s21_test_cov
+/src/obj/
+
+# Coverage report
+/src/coverage_report
+
+# VSCode
+.vscode/
+
+# Local developer files
+notes/
+.assistantignore
