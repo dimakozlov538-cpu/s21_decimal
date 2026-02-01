@@ -1,68 +1,65 @@
 CC = gcc
-CFLAGS = -Wall -Werror -Wextra -std=c11
-TEST_LINK_FLAGS = $(shell pkg-config --cflags --libs check) --coverage -lm
+CC_FLAGS = -Werror -Wall -Wextra -std=c11
 
-SRC_DIR = s21_decimal
-OBJ_DIR = obj
-INC_DIR = .
+INCLUDE = -I.
+GCOV_FLAGS = --coverage
+LINK_FLAGS = $(shell pkg-config --cflags --libs check) --coverage -lm
 
-SOURCES = $(wildcard $(SRC_DIR)/*.c)
-HEADERS = $(wildcard $(INC_DIR)/*.h)
-OBJECTS = $(SOURCES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
-LIBRARY = s21_decimal.a
+LIB_HEADERS = s21_decimal.h s21_decimal/s21_utility/s21_decimal_extended.h
+LIB_SRC = $(shell find s21_decimal/ -name "s21_*.c")
+TESTS_HEADERS = s21_test/s21_test_suites.h
+TESTS_SRC = $(shell find s21_test/ -name "s21_*.c")
 
-TEST_DIR = s21_decimal_test
-TEST_SOURCES = $(wildcard $(TEST_DIR)/*.c)
-TEST_OBJECTS = $(TEST_SOURCES:$(TEST_DIR)/%.c=$(OBJ_DIR)/test_%.o)
-TEST_BINARY = s21_test
+TARGET_LIB = s21_decimal.a
+TARGET_TESTS = s21_tests
+TARGET_COVERATE = s21_tests_coverage
+TARGET_COVERATE_INFO = s21_coverage.info
 
-CFLAGS_COV = $(CFLAGS) --coverage
-OBJECTS_COV = $(SOURCES:$(SRC_DIR)/%.c=$(OBJ_DIR)/cov_%.o)
+LIB_OBJ = $(LIB_SRC:%.c=%.o)
+TESTS_OBJ = $(TESTS_SRC:%.c=%.o)
+GCOV_OBJ = $(LIB_SRC:.c=.gcov.o) $(TESTS_SRC:.c=.gcov.o)
 
-.PHONY: all clean rebuild format_check format test run_test gcov_report
+REPORT_OUT = lcov_out
 
-all: $(LIBRARY)
+%.o: %.c $(LIB_HEADERS)
+	$(CC) $(CC_FLAGS) $(INCLUDE) -c $< -o $@
 
-$(LIBRARY): $(OBJECTS) $(HEADERS)
-	ar rcs $@ $(OBJECTS)
+%.gcov.o: %.c $(LIB_HEADERS)
+	$(CC) $(CC_FLAGS) $(GCOV_FLAGS) $(INCLUDE) -c $< -o $@
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS) | $(OBJ_DIR)
-	$(CC) $(CFLAGS) -I$(INC_DIR) -c $< -o $@
+all: $(TARGET_LIB)
 
-$(OBJ_DIR):
-	mkdir -p $@
+$(TARGET_LIB): $(LIB_OBJ)
+	ar rcs $@ $?
 
-test: $(TEST_BINARY)
+test: $(TARGET_TESTS)
 
-$(TEST_BINARY): $(LIBRARY) $(TEST_OBJECTS)
-	$(CC) $(CFLAGS) -I$(INC_DIR) $(TEST_OBJECTS) $(LIBRARY) $(TEST_LINK_FLAGS) -o $@
+run_tests: $(TARGET_TESTS)
+	@./$<
 
-$(OBJ_DIR)/test_%.o: $(TEST_DIR)/%.c $(HEADERS) | $(OBJ_DIR)
-	$(CC) $(CFLAGS) -I$(INC_DIR) -c $< -o $@
+$(TARGET_TESTS) : $(TESTS_OBJ) $(TARGET_LIB)
+	$(CC) $(INCLUDE) $^ -o $@ $(LINK_FLAGS)
 
-run_test: test
-	./$(TEST_BINARY)
+gcov_report: $(TARGET_COVERATE_INFO)
 
-gcov_report: $(OBJECTS_COV) $(TEST_OBJECTS)
-	$(CC) $(CFLAGS_COV) -I$(INC_DIR) $(OBJECTS_COV) $(TEST_OBJECTS) $(TEST_LINK_FLAGS) -o s21_test_cov
-	./s21_test_cov
-	mkdir -p coverage_report
-	lcov --capture --directory . --output-file coverage_report/coverage.info
-	genhtml coverage_report/coverage.info --output-directory coverage_report
+$(TARGET_COVERATE_INFO): $(TARGET_COVERATE)
+	-./$<
+	lcov -c -d . -o $@
+	genhtml $@ --output-directory $(REPORT_OUT)
 
-$(OBJ_DIR)/cov_%.o: $(SRC_DIR)/%.c $(HEADERS) | $(OBJ_DIR)
-	$(CC) $(CFLAGS_COV) -I$(INC_DIR) -c $< -o $@
+$(TARGET_COVERATE) : $(GCOV_OBJ)
+	$(CC) $(INCLUDE) $^ -o $@ $(LINK_FLAGS)
 
 clean:
-	rm -rf $(LIBRARY) $(OBJ_DIR) $(TEST_BINARY) coverage_report s21_test_cov
+	rm -f $(TARGET_LIB) $(TARGET_TESTS) $(TARGET_COVERATE) $(TARGET_COVERATE_INFO)
+	rm -f $(LIB_OBJ) $(TESTS_OBJ) $(GCOV_OBJ) $(GCOV_OBJ:.o=.gcda) $(GCOV_OBJ:.o=.gcno)
+	rm -rf $(REPORT_OUT)
 
 rebuild: clean all
 
-format_check:
-	clang-format -n --style=file:../materials/linters/.clang-format $(INC_DIR)/*.h
-	clang-format -n --style=file:../materials/linters/.clang-format $(SRC_DIR)/*.c
+format: $(LIB_HEADERS) $(LIB_SRC) $(TESTS_HEADERS) $(TESTS_SRC)
+	@cp ../materials/linters/.clang-format .
+	clang-format -i $^
+	@rm .clang-format
 
-format:
-	clang-format -i --style=file:../materials/linters/.clang-format $(INC_DIR)/*.h
-	clang-format -i --style=file:../materials/linters/.clang-format $(SRC_DIR)/*.c
-
+.PHONY: all test run_tests gcov_report clean rebuild format
