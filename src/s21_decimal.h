@@ -9,6 +9,9 @@
 #define S21_CONVERSION_OK 0
 #define S21_CONVERSION_ERROR 1
 
+// Limits
+#define S21_MAX_FLOAT 7.9228162514264337593543950335e28
+
 // Data Structure
 typedef struct {
     int bits[4];
