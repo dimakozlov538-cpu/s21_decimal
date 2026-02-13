@@ -1,4 +1,6 @@
 #include "s21_decimal.h"
+#include <math.h>
+#include <stdlib.h>
 #include <limits.h>
 
 int s21_from_decimal_to_int(s21_decimal src, int *dst) {
@@ -12,6 +14,7 @@ int s21_from_decimal_to_int(s21_decimal src, int *dst) {
         int sign = (bits3 >> 31) & 1;
 
         if (scale > 28) {
+            status = 1;
             *dst = 0;
         } else {
             double mantissa = (double)src.bits[0] +
@@ -31,7 +34,7 @@ int s21_from_decimal_to_int(s21_decimal src, int *dst) {
             }
 
             if (mantissa > (double)INT_MAX || mantissa < (double)INT_MIN) {
-                status = 2;
+                status = 1;
             } else {
                 *dst = (int)mantissa;
             }

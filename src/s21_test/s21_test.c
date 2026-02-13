@@ -12,8 +12,6 @@ static s21_decimal make_decimal(unsigned int lo, unsigned int mid, unsigned int 
     return d;
 }
 
-// === Тесты для s21_from_decimal_to_int ===
-
 START_TEST(test_int_valid_positive) {
     s21_decimal d = make_decimal(12345, 0, 0, 0, 0);
     int result = 0;
@@ -64,8 +62,6 @@ START_TEST(test_int_invalid_scale) {
     ck_assert_int_eq(result, 0);
 }
 END_TEST
-
-// === Тесты для s21_from_decimal_to_float ===
 
 START_TEST(test_float_zero) {
     s21_decimal d = {{0, 0, 0, 0}};

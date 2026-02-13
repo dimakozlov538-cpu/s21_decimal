@@ -1,4 +1,6 @@
 #include "s21_decimal.h"
+#include <math.h>
+#include <stdlib.h>
 
 int s21_from_decimal_to_float(s21_decimal src, float *dst) {
     int status = 0;
@@ -11,7 +13,7 @@ int s21_from_decimal_to_float(s21_decimal src, float *dst) {
         int sign = (bits3 >> 31) & 1;
 
         if (scale > 28) {
-            
+            status = 1;
             *dst = sign ? -0.0f : 0.0f;
         } else {
             
