@@ -50,7 +50,7 @@ START_TEST(test_int_overflow_positive) {
     s21_decimal d = make_decimal(0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0, 0);
     int result = 0;
     int status = s21_from_decimal_to_int(d, &result);
-    ck_assert_int_eq(status, 2);
+    ck_assert_int_eq(status, 1);
 }
 END_TEST
 
@@ -58,7 +58,7 @@ START_TEST(test_int_invalid_scale) {
     s21_decimal d = {{1, 0, 0, (29 << 16)}};
     int result = 999;
     int status = s21_from_decimal_to_int(d, &result);
-    ck_assert_int_eq(status, 0);
+    ck_assert_int_eq(status, 1);
     ck_assert_int_eq(result, 0);
 }
 END_TEST
@@ -113,7 +113,7 @@ START_TEST(test_float_invalid_scale) {
     s21_decimal d = {{1, 0, 0, (29 << 16) | (1U << 31)}};
     float result = 0.0f;
     int status = s21_from_decimal_to_float(d, &result);
-    ck_assert_int_eq(status, 0);
+    ck_assert_int_eq(status, 1);
     ck_assert(result == 0.0f);
     ck_assert(signbit(result) != 0);
 }
