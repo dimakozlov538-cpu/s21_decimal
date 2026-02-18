@@ -14,7 +14,6 @@ s21_decimal create_decimal(unsigned int low, unsigned int mid,
     return result;
 }
 
-
 START_TEST(sub_0) {
   s21_decimal val1 = {{2, 0, 0, ~(UINT_MAX / 2)}};
   s21_decimal val2 = {{2, 0, 0, 0}};
@@ -2208,11 +2207,3 @@ Suite* s21_decimal_suite(void) {
     return suite;
 }
 
-int main(void) {
-    Suite* suite = s21_decimal_suite();
-    SRunner* sr = srunner_create(suite);
-    srunner_run_all(sr, CK_VERBOSE);
-    int failed = srunner_ntests_failed(sr);
-    srunner_free(sr);
-    return failed ? 1 : 0;
-}

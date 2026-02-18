@@ -150,12 +150,3 @@ Suite *conversion_suite(void) {
     suite_add_tcase(s, tc_float);
     return s;
 }
-
-int main(void) {
-    Suite *s = conversion_suite();
-    SRunner *sr = srunner_create(s);
-    srunner_run_all(sr, CK_NORMAL);
-    int nf = srunner_ntests_failed(sr);
-    srunner_free(sr);
-    return (nf == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
-}
