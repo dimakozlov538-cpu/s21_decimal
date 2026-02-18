@@ -1,67 +1,64 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -std=c11 -g -I.
+GCOV_FLAGS = -fprofile-arcs -ftest-coverage
 LIBS = -lcheck -lsubunit -lm -lpthread -lrt
 
 SRC_DIR = s21_decimal
-TEST_DIR = s21_test
+HELPER_DIR = s21_helper
+TEST_DIR = s21_decimal_test
 BUILD_DIR = build
-COV_REPORT_DIR = coverage_report
+COV_REPORT_DIR = gcov_report
 
+# Все .c файлы из исходников
 SRC_FILES := $(wildcard $(SRC_DIR)/*.c)
-TEST_FILES := $(wildcard $(TEST_DIR)/*.c)
+HELPER_FILES := $(wildcard $(HELPER_DIR)/*.c)
+LIB_SRC := $(SRC_FILES) $(HELPER_FILES)
 
-SRC_OBJS := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRC_FILES))
-TEST_OBJS := $(patsubst $(TEST_DIR)/%.c, $(BUILD_DIR)/%_test.o, $(TEST_FILES))
+# Объектные файлы библиотеки с gcov
+LIB_OBJS := $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/$(SRC_DIR)/%.o,$(SRC_FILES))
+LIB_OBJS += $(patsubst $(HELPER_DIR)/%.c,$(BUILD_DIR)/$(HELPER_DIR)/%.o,$(HELPER_FILES))
 
-TEST_BIN = $(BUILD_DIR)/tests
+# Тестовые файлы → отдельные бинарники
+TEST_SOURCES := $(wildcard $(TEST_DIR)/*.c)
+TEST_BINS := $(patsubst $(TEST_DIR)/%.c,$(BUILD_DIR)/%.out,$(TEST_SOURCES))
 
-.PHONY: all test clean gcov_report coverage help
+.PHONY: all clean test gcov_report
 
 all: test
 
+# Создание директорий
 $(BUILD_DIR):
-	mkdir -p $@
+	mkdir -p $(BUILD_DIR)/$(SRC_DIR) $(BUILD_DIR)/$(HELPER_DIR)
 
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c s21_decimal.h | $(BUILD_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+# Компиляция исходников библиотеки (с gcov для отчёта)
+$(BUILD_DIR)/$(SRC_DIR)/%.o: $(SRC_DIR)/%.c s21_decimal.h | $(BUILD_DIR)
+	$(CC) $(CFLAGS) $(GCOV_FLAGS) -c $< -o $@
 
-$(BUILD_DIR)/%_test.o: $(TEST_DIR)/%.c s21_decimal.h | $(BUILD_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+$(BUILD_DIR)/$(HELPER_DIR)/%.o: $(HELPER_DIR)/%.c s21_decimal.h | $(BUILD_DIR)
+	$(CC) $(CFLAGS) $(GCOV_FLAGS) -c $< -o $@
 
-$(TEST_BIN): $(SRC_OBJS) $(TEST_OBJS) | $(BUILD_DIR)
-	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
+# Сборка каждого теста отдельно
+$(BUILD_DIR)/%.out: $(TEST_DIR)/%.c $(LIB_OBJS) | $(BUILD_DIR)
+	$(CC) $(CFLAGS) $(GCOV_FLAGS) $< $(LIB_OBJS) -o $@ $(LIBS)
 
-test: $(TEST_BIN)
-	./$(TEST_BIN)
+# Запуск всех тестов
+test: $(TEST_BINS)
+	@echo "Running all tests..."
+	@failed=0; \
+	for t in $(TEST_BINS); do \
+		echo ">>> $$t"; \
+		if ! $$t; then \
+			failed=1; \
+		fi; \
+	done; \
+	exit $$failed
 
-
-coverage: clean
-	$(MAKE) gcov_report
-
-gcov_report: clean
-	@mkdir -p $(BUILD_DIR)
-	$(eval COV_CFLAGS := $(CFLAGS) -fprofile-arcs -ftest-coverage)
-
-	@$(foreach src,$(SRC_FILES), \
-		$(CC) $(COV_CFLAGS) -c $(src) -o $(BUILD_DIR)/$(notdir $(src:.c=.o)) &&) true
-
-	@$(foreach test,$(TEST_FILES), \
-		$(CC) $(COV_CFLAGS) -c $(test) -o $(BUILD_DIR)/$(notdir $(test:.c=_test.o)) &&) true
-
-	$(CC) $(COV_CFLAGS) $(BUILD_DIR)/*.o -o $(TEST_BIN) $(LIBS)
-
-	./$(TEST_BIN)
-
+# Генерация отчёта покрытия
+gcov_report: test
 	lcov --capture --directory $(BUILD_DIR) --output-file coverage.info -q
 	genhtml coverage.info --output-directory $(COV_REPORT_DIR)
-	@echo "Coverage report generated in $(COV_REPORT_DIR)/index.html"
+	@echo "Coverage report: $(COV_REPORT_DIR)/index.html"
 
+# Очистка
 clean:
 	rm -rf $(BUILD_DIR) coverage.info $(COV_REPORT_DIR)
-
-help:
-	@echo "Available targets:"
-	@echo "  make           – build and run tests"
-	@echo "  make test      – run tests"
-	@echo "  make gcov_report – generate HTML coverage report"
-	@echo "  make clean     – remove build artifacts"
