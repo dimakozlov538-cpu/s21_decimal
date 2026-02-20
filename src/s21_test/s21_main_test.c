@@ -1,19 +1,22 @@
 #include <check.h>
+#include <stdlib.h>
 
 #include "s21_test_suites.h"
 
-int main() {
-  int number_failed;
-  Suite* suite = suite_create("s21_string");
-  SRunner* runner;
+int main(void) {
+    SRunner* sr = srunner_create(s21_decimal_suite());
+    
+    srunner_add_suite(sr, conversion_suite());
+    srunner_add_suite(sr, int_to_decimal_suite());
+    srunner_add_suite(sr, float_to_decimal_suite());
+    // srunner_add_suite(sr, from_int_to_decimal_suite());
+    // srunner_add_suite(sr, from_float_to_decimal_suite());
+    srunner_add_suite(sr, s21_add_other_function_suite());
 
-  s21_add_other_function_suite(suite);
-
-  runner = srunner_create(suite);
-
-  srunner_run_all(runner, CK_NORMAL);
-  number_failed = srunner_ntests_failed(runner);
-  srunner_free(runner);
-
-  return (number_failed == 0) ? 0 : 1;
+    srunner_run_all(sr, CK_NORMAL);
+    
+    int failed = srunner_ntests_failed(sr);
+    srunner_free(sr);
+    
+    return (failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

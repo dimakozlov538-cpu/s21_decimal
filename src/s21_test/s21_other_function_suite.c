@@ -176,7 +176,8 @@ START_TEST(s21_zero_helpers) {
 }
 END_TEST
 
-void s21_add_other_function_suite(Suite* suite) {
+Suite* s21_add_other_function_suite(void) {
+  Suite* suite = suite_create("S21_OTHER_FUNCTION SUITE");
   TCase* ts_other_functions = tcase_create("other_functions");
 
   tcase_add_loop_test(ts_other_functions, s21_truncate_cases, 0,
@@ -199,4 +200,6 @@ void s21_add_other_function_suite(Suite* suite) {
   tcase_add_test(ts_other_functions, s21_zero_helpers);
 
   suite_add_tcase(suite, ts_other_functions);
+
+  return suite;
 }
