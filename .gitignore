@@ -53,12 +53,6 @@ dkms.conf
 
 # Binaries and objects
 s21_decimal.a
-s21_test
-s21_test_cov
-/src/obj/
-
-# Coverage report
-/src/coverage_report
 
 # VSCode
 .vscode/
@@ -66,3 +60,8 @@ s21_test_cov
 # Local developer files
 notes/
 .assistantignore
+lcov_out/
+*.gcov.*
+s21_tests
+s21_tests_coverage
+s21_coverage.info
