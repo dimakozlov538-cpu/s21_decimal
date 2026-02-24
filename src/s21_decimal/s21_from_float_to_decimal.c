@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "s21_decimal.h"
+#include "s21_decimal/s21_helper/s21_helper.h"
 
 s21_decimal s21_str_to_decimal(char* str) {
     s21_decimal result = {0};

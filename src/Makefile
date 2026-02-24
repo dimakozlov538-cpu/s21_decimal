@@ -5,8 +5,8 @@ INCLUDE = -I.
 GCOV_FLAGS = --coverage
 LINK_FLAGS = $(shell pkg-config --cflags --libs check) --coverage -lm
 
-LIB_HEADERS = s21_decimal.h s21_decimal/s21_utility/s21_decimal_extended.h
-LIB_SRC = $(shell find s21_decimal/ -name "s21_*.c") $(shell find s21_helper/ -name "*.c")
+LIB_HEADERS = s21_decimal.h s21_decimal/s21_utility/s21_decimal_extended.h s21_decimal/s21_helper/s21_helper.h
+LIB_SRC = $(shell find s21_decimal/ -name "s21_*.c")
 TESTS_HEADERS = s21_test/s21_test_suites.h
 TESTS_SRC = $(shell find s21_test/ -name "s21_*.c")
 

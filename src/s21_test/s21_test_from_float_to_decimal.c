@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "s21_decimal.h"
+#include "s21_decimal/s21_helper/s21_helper.h"
 
 #define SCALE(x) (x << 16)
 
@@ -82,7 +83,7 @@ START_TEST(test_float_to_decimal) {
 }
 END_TEST
 
-Suite* float_to_decimal_suite(void) {
+Suite* s21_add_float_to_decimal_suite(void) {
     Suite* s = suite_create("S21_FROM_FLOAT_TO_DECIMAL SUITE");
 
     TCase* tc = tcase_create("s21_from_float_to_decimal");

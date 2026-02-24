@@ -4,15 +4,13 @@
 #include "s21_test_suites.h"
 
 int main(void) {
-    SRunner* sr = srunner_create(s21_decimal_suite());
-    
-    srunner_add_suite(sr, conversion_suite());
-    srunner_add_suite(sr, int_to_decimal_suite());
-    srunner_add_suite(sr, float_to_decimal_suite());
-    // srunner_add_suite(sr, from_int_to_decimal_suite());
-    // srunner_add_suite(sr, from_float_to_decimal_suite());
+    SRunner* sr = srunner_create(s21_add_ashlyuad_suite());
+    srunner_add_suite(sr, s21_add_dragonad_suite());
     srunner_add_suite(sr, s21_add_other_function_suite());
-
+    srunner_add_suite(sr, s21_add_conversion_suite());
+    srunner_add_suite(sr, s21_add_int_to_decimal_suite());
+    srunner_add_suite(sr, s21_add_float_to_decimal_suite());
+    
     srunner_run_all(sr, CK_NORMAL);
     
     int failed = srunner_ntests_failed(sr);

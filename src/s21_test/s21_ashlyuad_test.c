@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "s21_decimal.h"
+#include "s21_decimal/s21_utility/s21_decimal_extended.h"
 
 s21_decimal create_decimal(unsigned int low, unsigned int mid, 
                           unsigned int high, int scale) {
@@ -345,8 +346,8 @@ END_TEST
 START_TEST(add_17) {
   s21_decimal val1 = {{UINT_MAX, UINT_MAX, UINT_MAX, 0}};
   s21_decimal val2 = {{UINT_MAX, UINT_MAX, UINT_MAX, 0}};
-  set_scale(&val1, 5);
-  set_scale(&val2, 3);
+  s21_set_scale(&val1, 5);
+  s21_set_scale(&val2, 3);
   s21_decimal res;
   ck_assert_int_eq(0, s21_add(val1, val2, &res));
 }
@@ -355,8 +356,8 @@ END_TEST
 START_TEST(add_18) {
   s21_decimal val1 = {{UINT_MAX, UINT_MAX, UINT_MAX, ~(UINT_MAX / 2)}};
   s21_decimal val2 = {{UINT_MAX, UINT_MAX, UINT_MAX, ~(UINT_MAX / 2)}};
-  set_scale(&val1, 5);
-  set_scale(&val2, 3);
+  s21_set_scale(&val1, 5);
+  s21_set_scale(&val2, 3);
   s21_decimal res;
   ck_assert_int_eq(0, s21_add(val1, val2, &res));
 }
@@ -407,8 +408,8 @@ END_TEST
 START_TEST(is_less_7) {
     s21_decimal val1 = {{0, 0, 0, 0}};
     s21_decimal val2 = {{0, 0, 0, 0}};
-    set_scale(&val1, 2);
-    set_scale(&val2, 1);
+    s21_set_scale(&val1, 2);
+    s21_set_scale(&val2, 1);
     ck_assert_int_eq(0, s21_is_less(val1, val2));
 }
 END_TEST
@@ -416,8 +417,8 @@ END_TEST
 START_TEST(is_less_8) {
     s21_decimal val1 = {{100, 0, 0, 0}};
     s21_decimal val2 = {{10, 0, 0, 0}};
-    set_scale(&val1, 2);
-    set_scale(&val2, 1);
+    s21_set_scale(&val1, 2);
+    s21_set_scale(&val2, 1);
     ck_assert_int_eq(0, s21_is_less(val1, val2));
 }
 END_TEST
@@ -425,8 +426,8 @@ END_TEST
 START_TEST(is_less_9) {
     s21_decimal val1 = {{10, 0, 0, 0}};
     s21_decimal val2 = {{100, 0, 0, 0}};
-    set_scale(&val1, 1);
-    set_scale(&val2, 2);
+    s21_set_scale(&val1, 1);
+    s21_set_scale(&val2, 2);
     ck_assert_int_eq(0, s21_is_less(val1, val2));
 }
 END_TEST
@@ -448,8 +449,8 @@ END_TEST
 START_TEST(is_less_12) {
     s21_decimal val1 = {{5, 0, 0, 0}};
     s21_decimal val2 = {{10, 0, 0, 0}};
-    set_sign(&val1, 1);
-    set_sign(&val2, 1);
+    s21_set_sign(&val1, 1);
+    s21_set_sign(&val2, 1);
     ck_assert_int_eq(0, s21_is_less(val1, val2));
 }
 END_TEST
@@ -485,8 +486,8 @@ END_TEST
 START_TEST(is_less_17) {
     s21_decimal val1 = {{0, 0, 0, 0}};
     s21_decimal val2 = {{0, 0, 0, 0}};
-    set_sign(&val1, 1);
-    set_sign(&val2, 1);
+    s21_set_sign(&val1, 1);
+    s21_set_sign(&val2, 1);
     ck_assert_int_eq(0, s21_is_less(val1, val2));
 }
 END_TEST
@@ -494,8 +495,8 @@ END_TEST
 START_TEST(is_less_18) {
     s21_decimal val1 = {{5, 0, 0, 0}};
     s21_decimal val2 = {{5, 0, 0, 0}};
-    set_scale(&val1, 2);
-    set_scale(&val2, 1);
+    s21_set_scale(&val1, 2);
+    s21_set_scale(&val2, 1);
     ck_assert_int_eq(1, s21_is_less(val1, val2));
 }
 END_TEST
@@ -503,8 +504,8 @@ END_TEST
 START_TEST(is_less_19) {
     s21_decimal val1 = {{5, 0, 0, 0}};
     s21_decimal val2 = {{5, 0, 0, 0}};
-    set_scale(&val1, 1);
-    set_scale(&val2, 2);
+    s21_set_scale(&val1, 1);
+    s21_set_scale(&val2, 2);
     ck_assert_int_eq(0, s21_is_less(val1, val2));
 }
 END_TEST
@@ -561,8 +562,8 @@ END_TEST
 START_TEST(is_less_or_equal_7) {
     s21_decimal val1 = {{100, 0, 0, 0}};
     s21_decimal val2 = {{100, 0, 0, 0}};
-    set_scale(&val1, 2);
-    set_scale(&val2, 1);
+    s21_set_scale(&val1, 2);
+    s21_set_scale(&val2, 1);
     ck_assert_int_eq(1, s21_is_less_or_equal(val1, val2));
 }
 END_TEST
@@ -570,8 +571,8 @@ END_TEST
 START_TEST(is_less_or_equal_8) {
     s21_decimal val1 = {{100, 0, 0, 0}};
     s21_decimal val2 = {{1000, 0, 0, 0}};
-    set_scale(&val1, 1);
-    set_scale(&val2, 2);
+    s21_set_scale(&val1, 1);
+    s21_set_scale(&val2, 2);
     ck_assert_int_eq(1, s21_is_less_or_equal(val1, val2));
 }
 END_TEST
@@ -579,8 +580,8 @@ END_TEST
 START_TEST(is_less_or_equal_9) {
     s21_decimal val1 = {{150, 0, 0, 0}};
     s21_decimal val2 = {{15, 0, 0, 0}};
-    set_scale(&val1, 2);
-    set_scale(&val2, 1);
+    s21_set_scale(&val1, 2);
+    s21_set_scale(&val2, 1);
     ck_assert_int_eq(1, s21_is_less_or_equal(val1, val2));
 }
 END_TEST
@@ -588,8 +589,8 @@ END_TEST
 START_TEST(is_less_or_equal_10) {
     s21_decimal val1 = {{15, 0, 0, 0}};
     s21_decimal val2 = {{150, 0, 0, 0}};
-    set_scale(&val1, 1);
-    set_scale(&val2, 2);
+    s21_set_scale(&val1, 1);
+    s21_set_scale(&val2, 2);
     ck_assert_int_eq(1, s21_is_less_or_equal(val1, val2));
 }
 END_TEST
@@ -653,8 +654,8 @@ END_TEST
 START_TEST(is_less_or_equal_19) {
     s21_decimal val1 = {{0, 0, 0, 0}};
     s21_decimal val2 = {{0, 0, 0, 0}};
-    set_sign(&val1, 1);
-    set_sign(&val2, 1);
+    s21_set_sign(&val1, 1);
+    s21_set_sign(&val2, 1);
     ck_assert_int_eq(1, s21_is_less_or_equal(val1, val2));
 }
 END_TEST
@@ -662,8 +663,8 @@ END_TEST
 START_TEST(is_less_or_equal_20) {
     s21_decimal val1 = {{5, 0, 0, 0}};
     s21_decimal val2 = {{5, 0, 0, 0}};
-    set_scale(&val1, 2);
-    set_scale(&val2, 1);
+    s21_set_scale(&val1, 2);
+    s21_set_scale(&val2, 1);
     ck_assert_int_eq(1, s21_is_less_or_equal(val1, val2));
 }
 END_TEST
@@ -671,8 +672,8 @@ END_TEST
 START_TEST(is_less_or_equal_21) {
     s21_decimal val1 = {{5, 0, 0, 0}};
     s21_decimal val2 = {{5, 0, 0, 0}};
-    set_scale(&val1, 1);
-    set_scale(&val2, 2);
+    s21_set_scale(&val1, 1);
+    s21_set_scale(&val2, 2);
     ck_assert_int_eq(0, s21_is_less_or_equal(val1, val2));
 }
 END_TEST
@@ -694,8 +695,8 @@ END_TEST
 START_TEST(is_less_or_equal_24) {
     s21_decimal val1 = {{100, 0, 0, ~(UINT_MAX / 2)}};
     s21_decimal val2 = {{10, 0, 0, 0}};
-    set_scale(&val1, 1);
-    set_scale(&val2, 0);
+    s21_set_scale(&val1, 1);
+    s21_set_scale(&val2, 0);
     ck_assert_int_eq(1, s21_is_less_or_equal(val1, val2));
 }
 END_TEST
@@ -703,8 +704,8 @@ END_TEST
 START_TEST(is_less_or_equal_25) {
     s21_decimal val1 = {{10, 0, 0, 0}};
     s21_decimal val2 = {{100, 0, 0, ~(UINT_MAX / 2)}};
-    set_scale(&val1, 0);
-    set_scale(&val2, 1);
+    s21_set_scale(&val1, 0);
+    s21_set_scale(&val2, 1);
     ck_assert_int_eq(0, s21_is_less_or_equal(val1, val2));
 }
 END_TEST
@@ -712,8 +713,8 @@ END_TEST
 START_TEST(is_less_or_equal_26) {
     s21_decimal val1 = {{100, 0, 0, 0}};
     s21_decimal val2 = {{10000, 0, 0, 0}};
-    set_scale(&val1, 1);
-    set_scale(&val2, 3);
+    s21_set_scale(&val1, 1);
+    s21_set_scale(&val2, 3);
     ck_assert_int_eq(1, s21_is_less_or_equal(val1, val2));
 }
 END_TEST
@@ -721,8 +722,8 @@ END_TEST
 START_TEST(is_less_or_equal_27) {
     s21_decimal val1 = {{1, 0, 0, 0}};
     s21_decimal val2 = {{1000000, 0, 0, 0}};
-    set_scale(&val1, 0);
-    set_scale(&val2, 6);
+    s21_set_scale(&val1, 0);
+    s21_set_scale(&val2, 6);
     ck_assert_int_eq(1, s21_is_less_or_equal(val1, val2));
 }
 END_TEST
@@ -730,8 +731,8 @@ END_TEST
 START_TEST(is_less_or_equal_28) {
     s21_decimal val1 = {{150, 0, 0, ~(UINT_MAX / 2)}};
     s21_decimal val2 = {{15, 0, 0, ~(UINT_MAX / 2)}};
-    set_scale(&val1, 2);
-    set_scale(&val2, 1);
+    s21_set_scale(&val1, 2);
+    s21_set_scale(&val2, 1);
     ck_assert_int_eq(1, s21_is_less_or_equal(val1, val2));
 }
 END_TEST
@@ -781,8 +782,8 @@ END_TEST
 START_TEST(is_greater_7) {
     s21_decimal val1 = {{100, 0, 0, 0}};
     s21_decimal val2 = {{100, 0, 0, 0}};
-    set_scale(&val1, 1);
-    set_scale(&val2, 2);
+    s21_set_scale(&val1, 1);
+    s21_set_scale(&val2, 2);
     ck_assert_int_eq(1, s21_is_greater(val1, val2));
 }
 END_TEST
@@ -790,8 +791,8 @@ END_TEST
 START_TEST(is_greater_8) {
     s21_decimal val1 = {{100, 0, 0, 0}};
     s21_decimal val2 = {{1000, 0, 0, 0}};
-    set_scale(&val1, 1);
-    set_scale(&val2, 2);
+    s21_set_scale(&val1, 1);
+    s21_set_scale(&val2, 2);
     ck_assert_int_eq(0, s21_is_greater(val1, val2));
 }
 END_TEST
@@ -799,8 +800,8 @@ END_TEST
 START_TEST(is_greater_9) {
     s21_decimal val1 = {{150, 0, 0, 0}};
     s21_decimal val2 = {{15, 0, 0, 0}};
-    set_scale(&val1, 2);   
-    set_scale(&val2, 1);   
+    s21_set_scale(&val1, 2);   
+    s21_set_scale(&val2, 1);   
     ck_assert_int_eq(0, s21_is_greater(val1, val2));  
 }
 END_TEST
@@ -808,8 +809,8 @@ END_TEST
 START_TEST(is_greater_10) {
     s21_decimal val1 = {{151, 0, 0, 0}};
     s21_decimal val2 = {{15, 0, 0, 0}};
-    set_scale(&val1, 2);   
-    set_scale(&val2, 1);   
+    s21_set_scale(&val1, 2);   
+    s21_set_scale(&val2, 1);   
     ck_assert_int_eq(1, s21_is_greater(val1, val2));  
 }
 END_TEST
@@ -873,8 +874,8 @@ END_TEST
 START_TEST(is_greater_19) {
     s21_decimal val1 = {{0, 0, 0, 0}};
     s21_decimal val2 = {{0, 0, 0, 0}};
-    set_sign(&val1, 1);
-    set_sign(&val2, 1);
+    s21_set_sign(&val1, 1);
+    s21_set_sign(&val2, 1);
     ck_assert_int_eq(0, s21_is_greater(val1, val2));  
 }
 END_TEST
@@ -882,8 +883,8 @@ END_TEST
 START_TEST(is_greater_20) {
     s21_decimal val1 = {{5, 0, 0, 0}};
     s21_decimal val2 = {{5, 0, 0, 0}};
-    set_scale(&val1, 1);   
-    set_scale(&val2, 2);   
+    s21_set_scale(&val1, 1);   
+    s21_set_scale(&val2, 2);   
     ck_assert_int_eq(1, s21_is_greater(val1, val2));  
 }
 END_TEST
@@ -891,8 +892,8 @@ END_TEST
 START_TEST(is_greater_21) {
     s21_decimal val1 = {{5, 0, 0, 0}};
     s21_decimal val2 = {{5, 0, 0, 0}};
-    set_scale(&val1, 2);   
-    set_scale(&val2, 1);   
+    s21_set_scale(&val1, 2);   
+    s21_set_scale(&val2, 1);   
     ck_assert_int_eq(0, s21_is_greater(val1, val2));  
 }
 END_TEST
@@ -914,8 +915,8 @@ END_TEST
 START_TEST(is_greater_24) {
     s21_decimal val1 = {{10, 0, 0, 0}};
     s21_decimal val2 = {{100, 0, 0, ~(UINT_MAX / 2)}};
-    set_scale(&val1, 0);   
-    set_scale(&val2, 1);   
+    s21_set_scale(&val1, 0);   
+    s21_set_scale(&val2, 1);   
     ck_assert_int_eq(1, s21_is_greater(val1, val2));  
 }
 END_TEST
@@ -923,8 +924,8 @@ END_TEST
 START_TEST(is_greater_25) {
     s21_decimal val1 = {{100, 0, 0, ~(UINT_MAX / 2)}};
     s21_decimal val2 = {{10, 0, 0, 0}};
-    set_scale(&val1, 1);   
-    set_scale(&val2, 0);   
+    s21_set_scale(&val1, 1);   
+    s21_set_scale(&val2, 0);   
     ck_assert_int_eq(0, s21_is_greater(val1, val2));  
 }
 END_TEST
@@ -932,8 +933,8 @@ END_TEST
 START_TEST(is_greater_26) {
     s21_decimal val1 = {{100, 0, 0, 0}};
     s21_decimal val2 = {{10000, 0, 0, 0}};
-    set_scale(&val1, 1);   
-    set_scale(&val2, 3);   
+    s21_set_scale(&val1, 1);   
+    s21_set_scale(&val2, 3);   
     ck_assert_int_eq(0, s21_is_greater(val1, val2));  
 }
 END_TEST
@@ -941,8 +942,8 @@ END_TEST
 START_TEST(is_greater_27) {
     s21_decimal val1 = {{1, 0, 0, 0}};
     s21_decimal val2 = {{1000000, 0, 0, 0}};
-    set_scale(&val1, 0);   
-    set_scale(&val2, 6);   
+    s21_set_scale(&val1, 0);   
+    s21_set_scale(&val2, 6);   
     ck_assert_int_eq(0, s21_is_greater(val1, val2));  
 }
 END_TEST
@@ -950,8 +951,8 @@ END_TEST
 START_TEST(is_greater_28) {
     s21_decimal val1 = {{2, 0, 0, 0}};
     s21_decimal val2 = {{1000000, 0, 0, 0}};
-    set_scale(&val1, 0);   
-    set_scale(&val2, 6);   
+    s21_set_scale(&val1, 0);   
+    s21_set_scale(&val2, 6);   
     ck_assert_int_eq(1, s21_is_greater(val1, val2));  
 }
 END_TEST
@@ -960,8 +961,8 @@ START_TEST(is_greater_29) {
      
     s21_decimal val1 = {{149, 0, 0, ~(UINT_MAX / 2)}};
     s21_decimal val2 = {{15, 0, 0, ~(UINT_MAX / 2)}};
-    set_scale(&val1, 2);   
-    set_scale(&val2, 1);   
+    s21_set_scale(&val1, 2);   
+    s21_set_scale(&val2, 1);   
     ck_assert_int_eq(1, s21_is_greater(val1, val2));  
 }
 END_TEST
@@ -970,8 +971,8 @@ START_TEST(is_greater_30) {
      
     s21_decimal val1 = {{151, 0, 0, ~(UINT_MAX / 2)}};
     s21_decimal val2 = {{15, 0, 0, ~(UINT_MAX / 2)}};
-    set_scale(&val1, 2);   
-    set_scale(&val2, 1);   
+    s21_set_scale(&val1, 2);   
+    s21_set_scale(&val2, 1);   
     ck_assert_int_eq(0, s21_is_greater(val1, val2));  
 }
 END_TEST
@@ -1053,8 +1054,8 @@ END_TEST
 START_TEST(is_greater_or_equal_7) {
     s21_decimal val1 = {{100, 0, 0, 0}};
     s21_decimal val2 = {{100, 0, 0, 0}};
-    set_scale(&val1, 1);   
-    set_scale(&val2, 2);   
+    s21_set_scale(&val1, 1);   
+    s21_set_scale(&val2, 2);   
     ck_assert_int_eq(1, s21_is_greater_or_equal(val1, val2));  
 }
 END_TEST
@@ -1062,8 +1063,8 @@ END_TEST
 START_TEST(is_greater_or_equal_8) {
     s21_decimal val1 = {{100, 0, 0, 0}};
     s21_decimal val2 = {{1000, 0, 0, 0}};
-    set_scale(&val1, 1);   
-    set_scale(&val2, 2);   
+    s21_set_scale(&val1, 1);   
+    s21_set_scale(&val2, 2);   
     ck_assert_int_eq(1, s21_is_greater_or_equal(val1, val2));  
 }
 END_TEST
@@ -1071,8 +1072,8 @@ END_TEST
 START_TEST(is_greater_or_equal_9) {
     s21_decimal val1 = {{150, 0, 0, 0}};
     s21_decimal val2 = {{15, 0, 0, 0}};
-    set_scale(&val1, 2);   
-    set_scale(&val2, 1);   
+    s21_set_scale(&val1, 2);   
+    s21_set_scale(&val2, 1);   
     ck_assert_int_eq(1, s21_is_greater_or_equal(val1, val2));  
 }
 END_TEST
@@ -1080,8 +1081,8 @@ END_TEST
 START_TEST(is_greater_or_equal_10) {
     s21_decimal val1 = {{149, 0, 0, 0}};
     s21_decimal val2 = {{15, 0, 0, 0}};
-    set_scale(&val1, 2);   
-    set_scale(&val2, 1);   
+    s21_set_scale(&val1, 2);   
+    s21_set_scale(&val2, 1);   
     ck_assert_int_eq(0, s21_is_greater_or_equal(val1, val2));  
 }
 END_TEST
@@ -1145,8 +1146,8 @@ END_TEST
 START_TEST(is_greater_or_equal_19) {
     s21_decimal val1 = {{0, 0, 0, 0}};
     s21_decimal val2 = {{0, 0, 0, 0}};
-    set_sign(&val1, 1);
-    set_sign(&val2, 1);
+    s21_set_sign(&val1, 1);
+    s21_set_sign(&val2, 1);
     ck_assert_int_eq(1, s21_is_greater_or_equal(val1, val2));  
 }
 END_TEST
@@ -1154,8 +1155,8 @@ END_TEST
 START_TEST(is_greater_or_equal_20) {
     s21_decimal val1 = {{5, 0, 0, 0}};
     s21_decimal val2 = {{5, 0, 0, 0}};
-    set_scale(&val1, 1);   
-    set_scale(&val2, 2);   
+    s21_set_scale(&val1, 1);   
+    s21_set_scale(&val2, 2);   
     ck_assert_int_eq(1, s21_is_greater_or_equal(val1, val2));  
 }
 END_TEST
@@ -1163,8 +1164,8 @@ END_TEST
 START_TEST(is_greater_or_equal_21) {
     s21_decimal val1 = {{5, 0, 0, 0}};
     s21_decimal val2 = {{5, 0, 0, 0}};
-    set_scale(&val1, 2);   
-    set_scale(&val2, 1);   
+    s21_set_scale(&val1, 2);   
+    s21_set_scale(&val2, 1);   
     ck_assert_int_eq(0, s21_is_greater_or_equal(val1, val2));  
 }
 END_TEST
@@ -1186,8 +1187,8 @@ END_TEST
 START_TEST(is_greater_or_equal_24) {
     s21_decimal val1 = {{10, 0, 0, 0}};
     s21_decimal val2 = {{100, 0, 0, ~(UINT_MAX / 2)}};
-    set_scale(&val1, 0);   
-    set_scale(&val2, 1);   
+    s21_set_scale(&val1, 0);   
+    s21_set_scale(&val2, 1);   
     ck_assert_int_eq(1, s21_is_greater_or_equal(val1, val2));  
 }
 END_TEST
@@ -1195,8 +1196,8 @@ END_TEST
 START_TEST(is_greater_or_equal_25) {
     s21_decimal val1 = {{100, 0, 0, ~(UINT_MAX / 2)}};
     s21_decimal val2 = {{10, 0, 0, 0}};
-    set_scale(&val1, 1);   
-    set_scale(&val2, 0);   
+    s21_set_scale(&val1, 1);   
+    s21_set_scale(&val2, 0);   
     ck_assert_int_eq(0, s21_is_greater_or_equal(val1, val2));  
 }
 END_TEST
@@ -1204,8 +1205,8 @@ END_TEST
 START_TEST(is_greater_or_equal_26) {
     s21_decimal val1 = {{100, 0, 0, 0}};
     s21_decimal val2 = {{10000, 0, 0, 0}};
-    set_scale(&val1, 1);   
-    set_scale(&val2, 3);   
+    s21_set_scale(&val1, 1);   
+    s21_set_scale(&val2, 3);   
     ck_assert_int_eq(1, s21_is_greater_or_equal(val1, val2));  
 }
 END_TEST
@@ -1213,8 +1214,8 @@ END_TEST
 START_TEST(is_greater_or_equal_27) {
     s21_decimal val1 = {{1, 0, 0, 0}};
     s21_decimal val2 = {{1000000, 0, 0, 0}};
-    set_scale(&val1, 0);   
-    set_scale(&val2, 6);   
+    s21_set_scale(&val1, 0);   
+    s21_set_scale(&val2, 6);   
     ck_assert_int_eq(1, s21_is_greater_or_equal(val1, val2));  
 }
 END_TEST
@@ -1222,8 +1223,8 @@ END_TEST
 START_TEST(is_greater_or_equal_28) {
     s21_decimal val1 = {{2, 0, 0, 0}};
     s21_decimal val2 = {{1000000, 0, 0, 0}};
-    set_scale(&val1, 0);   
-    set_scale(&val2, 6);   
+    s21_set_scale(&val1, 0);   
+    s21_set_scale(&val2, 6);   
     ck_assert_int_eq(1, s21_is_greater_or_equal(val1, val2));  
 }
 END_TEST
@@ -1232,8 +1233,8 @@ START_TEST(is_greater_or_equal_29) {
      
     s21_decimal val1 = {{149, 0, 0, ~(UINT_MAX / 2)}};
     s21_decimal val2 = {{15, 0, 0, ~(UINT_MAX / 2)}};
-    set_scale(&val1, 2);   
-    set_scale(&val2, 1);   
+    s21_set_scale(&val1, 2);   
+    s21_set_scale(&val2, 1);   
     ck_assert_int_eq(1, s21_is_greater_or_equal(val1, val2));  
 }
 END_TEST
@@ -1242,8 +1243,8 @@ START_TEST(is_greater_or_equal_30) {
      
     s21_decimal val1 = {{151, 0, 0, ~(UINT_MAX / 2)}};
     s21_decimal val2 = {{15, 0, 0, ~(UINT_MAX / 2)}};
-    set_scale(&val1, 2);   
-    set_scale(&val2, 1);   
+    s21_set_scale(&val1, 2);   
+    s21_set_scale(&val2, 1);   
     ck_assert_int_eq(0, s21_is_greater_or_equal(val1, val2));  
 }
 END_TEST
@@ -1284,8 +1285,8 @@ START_TEST(is_greater_or_equal_35) {
      
     s21_decimal val1 = {{150, 0, 0, ~(UINT_MAX / 2)}};
     s21_decimal val2 = {{15, 0, 0, ~(UINT_MAX / 2)}};
-    set_scale(&val1, 2);   
-    set_scale(&val2, 1);   
+    s21_set_scale(&val1, 2);   
+    s21_set_scale(&val2, 1);   
     ck_assert_int_eq(1, s21_is_greater_or_equal(val1, val2));
 }
 END_TEST
@@ -1294,7 +1295,7 @@ START_TEST(is_greater_or_equal_36) {
      
     s21_decimal val1 = {{1, 0, 0, 0}};
     s21_decimal val2 = {{0, 0, 0, 0}};
-    set_scale(&val1, 28);   
+    s21_set_scale(&val1, 28);   
     ck_assert_int_eq(1, s21_is_greater_or_equal(val1, val2));
 }
 END_TEST
@@ -1303,7 +1304,7 @@ START_TEST(is_greater_or_equal_37) {
      
     s21_decimal val1 = {{0, 0, 0, 0}};
     s21_decimal val2 = {{1, 0, 0, ~(UINT_MAX / 2)}};
-    set_scale(&val2, 28);   
+    s21_set_scale(&val2, 28);   
     ck_assert_int_eq(1, s21_is_greater_or_equal(val1, val2));
 }
 END_TEST
@@ -1361,8 +1362,8 @@ END_TEST
 START_TEST(is_equal_7) {
     s21_decimal val1 = {{100, 0, 0, 0}};
     s21_decimal val2 = {{100, 0, 0, 0}};
-    set_scale(&val1, 2);   
-    set_scale(&val2, 1);   
+    s21_set_scale(&val1, 2);   
+    s21_set_scale(&val2, 1);   
     ck_assert_int_eq(0, s21_is_equal(val1, val2));  
 }
 END_TEST
@@ -1370,8 +1371,8 @@ END_TEST
 START_TEST(is_equal_8) {
     s21_decimal val1 = {{100, 0, 0, 0}};
     s21_decimal val2 = {{1000, 0, 0, 0}};
-    set_scale(&val1, 1);   
-    set_scale(&val2, 2);   
+    s21_set_scale(&val1, 1);   
+    s21_set_scale(&val2, 2);   
     ck_assert_int_eq(1, s21_is_equal(val1, val2));  
 }
 END_TEST
@@ -1379,8 +1380,8 @@ END_TEST
 START_TEST(is_equal_9) {
     s21_decimal val1 = {{150, 0, 0, 0}};
     s21_decimal val2 = {{15, 0, 0, 0}};
-    set_scale(&val1, 2);   
-    set_scale(&val2, 1);   
+    s21_set_scale(&val1, 2);   
+    s21_set_scale(&val2, 1);   
     ck_assert_int_eq(1, s21_is_equal(val1, val2));  
 }
 END_TEST
@@ -1388,8 +1389,8 @@ END_TEST
 START_TEST(is_equal_10) {
     s21_decimal val1 = {{151, 0, 0, 0}};
     s21_decimal val2 = {{15, 0, 0, 0}};
-    set_scale(&val1, 2);   
-    set_scale(&val2, 1);   
+    s21_set_scale(&val1, 2);   
+    s21_set_scale(&val2, 1);   
     ck_assert_int_eq(0, s21_is_equal(val1, val2));  
 }
 END_TEST
@@ -1446,8 +1447,8 @@ END_TEST
 START_TEST(is_equal_18) {
     s21_decimal val1 = {{0, 0, 0, 0}};
     s21_decimal val2 = {{0, 0, 0, 0}};
-    set_sign(&val1, 1);
-    set_sign(&val2, 1);
+    s21_set_sign(&val1, 1);
+    s21_set_sign(&val2, 1);
     ck_assert_int_eq(1, s21_is_equal(val1, val2));  
 }
 END_TEST
@@ -1469,8 +1470,8 @@ END_TEST
 START_TEST(is_equal_21) {
     s21_decimal val1 = {{5, 0, 0, 0}};
     s21_decimal val2 = {{5, 0, 0, 0}};
-    set_scale(&val1, 2);   
-    set_scale(&val2, 1);   
+    s21_set_scale(&val1, 2);   
+    s21_set_scale(&val2, 1);   
     ck_assert_int_eq(0, s21_is_equal(val1, val2));  
 }
 END_TEST
@@ -1478,8 +1479,8 @@ END_TEST
 START_TEST(is_equal_22) {
     s21_decimal val1 = {{5, 0, 0, 0}};
     s21_decimal val2 = {{5, 0, 0, 0}};
-    set_scale(&val1, 1);   
-    set_scale(&val2, 2);   
+    s21_set_scale(&val1, 1);   
+    s21_set_scale(&val2, 2);   
     ck_assert_int_eq(0, s21_is_equal(val1, val2));  
 }
 END_TEST
@@ -1508,8 +1509,8 @@ END_TEST
 START_TEST(is_equal_26) {
     s21_decimal val1 = {{10, 0, 0, 0}};
     s21_decimal val2 = {{100, 0, 0, ~(UINT_MAX / 2)}};
-    set_scale(&val1, 0);   
-    set_scale(&val2, 1);   
+    s21_set_scale(&val1, 0);   
+    s21_set_scale(&val2, 1);   
     ck_assert_int_eq(0, s21_is_equal(val1, val2));  
 }
 END_TEST
@@ -1517,8 +1518,8 @@ END_TEST
 START_TEST(is_equal_27) {
     s21_decimal val1 = {{100, 0, 0, 0}};
     s21_decimal val2 = {{100, 0, 0, 0}};
-    set_scale(&val1, 1);   
-    set_scale(&val2, 3);   
+    s21_set_scale(&val1, 1);   
+    s21_set_scale(&val2, 3);   
     ck_assert_int_eq(0, s21_is_equal(val1, val2));  
 }
 END_TEST
@@ -1526,8 +1527,8 @@ END_TEST
 START_TEST(is_equal_28) {
     s21_decimal val1 = {{1, 0, 0, 0}};
     s21_decimal val2 = {{1000000, 0, 0, 0}};
-    set_scale(&val1, 0);   
-    set_scale(&val2, 6);   
+    s21_set_scale(&val1, 0);   
+    s21_set_scale(&val2, 6);   
     ck_assert_int_eq(1, s21_is_equal(val1, val2));  
 }
 END_TEST
@@ -1535,8 +1536,8 @@ END_TEST
 START_TEST(is_equal_29) {
     s21_decimal val1 = {{2, 0, 0, 0}};
     s21_decimal val2 = {{1000000, 0, 0, 0}};
-    set_scale(&val1, 0);   
-    set_scale(&val2, 6);   
+    s21_set_scale(&val1, 0);   
+    s21_set_scale(&val2, 6);   
     ck_assert_int_eq(0, s21_is_equal(val1, val2));  
 }
 END_TEST
@@ -1545,8 +1546,8 @@ START_TEST(is_equal_30) {
      
     s21_decimal val1 = {{149, 0, 0, ~(UINT_MAX / 2)}};
     s21_decimal val2 = {{15, 0, 0, ~(UINT_MAX / 2)}};
-    set_scale(&val1, 2);   
-    set_scale(&val2, 1);   
+    s21_set_scale(&val1, 2);   
+    s21_set_scale(&val2, 1);   
     ck_assert_int_eq(0, s21_is_equal(val1, val2));
 }
 END_TEST
@@ -1555,8 +1556,8 @@ START_TEST(is_equal_31) {
      
     s21_decimal val1 = {{150, 0, 0, ~(UINT_MAX / 2)}};
     s21_decimal val2 = {{15, 0, 0, ~(UINT_MAX / 2)}};
-    set_scale(&val1, 2);   
-    set_scale(&val2, 1);   
+    s21_set_scale(&val1, 2);   
+    s21_set_scale(&val2, 1);   
     ck_assert_int_eq(1, s21_is_equal(val1, val2));
 }
 END_TEST
@@ -1579,8 +1580,8 @@ END_TEST
 START_TEST(is_equal_34) {
     s21_decimal val1 = {{12345, 0, 0, 0}};
     s21_decimal val2 = {{12345, 0, 0, 0}};
-    set_scale(&val1, 2);
-    set_scale(&val2, 3);
+    s21_set_scale(&val1, 2);
+    s21_set_scale(&val2, 3);
     ck_assert_int_eq(0, s21_is_equal(val1, val2));
 }
 END_TEST
@@ -1588,8 +1589,8 @@ END_TEST
 START_TEST(is_equal_35) {
     s21_decimal val1 = {{1, 0, 0, 0}};
     s21_decimal val2 = {{1, 0, 0, 0}};
-    set_scale(&val1, 28);
-    set_scale(&val2, 28);
+    s21_set_scale(&val1, 28);
+    s21_set_scale(&val2, 28);
     ck_assert_int_eq(1, s21_is_equal(val1, val2));
 }
 END_TEST
@@ -1597,8 +1598,8 @@ END_TEST
 START_TEST(is_equal_36) {
     s21_decimal val1 = {{123450, 0, 0, 0}};
     s21_decimal val2 = {{12345, 0, 0, 0}};
-    set_scale(&val1, 3);
-    set_scale(&val2, 2);
+    s21_set_scale(&val1, 3);
+    s21_set_scale(&val2, 2);
     ck_assert_int_eq(1, s21_is_equal(val1, val2));
 }
 END_TEST
@@ -1606,8 +1607,8 @@ END_TEST
 START_TEST(is_equal_37) {
     s21_decimal val1 = {{0x99999999, 0x99999999, 0x19999999, 0}};
     s21_decimal val2 = {{0x99999999, 0x99999999, 0x19999999, 0}};
-    set_scale(&val1, 5);
-    set_scale(&val2, 10);
+    s21_set_scale(&val1, 5);
+    s21_set_scale(&val2, 10);
     ck_assert_int_eq(0, s21_is_equal(val1, val2));
 }
 END_TEST
@@ -1664,8 +1665,8 @@ END_TEST
 START_TEST(is_not_equal_7) {
     s21_decimal val1 = {{100, 0, 0, 0}};
     s21_decimal val2 = {{100, 0, 0, 0}};
-    set_scale(&val1, 2);
-    set_scale(&val2, 1);
+    s21_set_scale(&val1, 2);
+    s21_set_scale(&val2, 1);
     ck_assert_int_eq(1, s21_is_not_equal(val1, val2));
 }
 END_TEST
@@ -1673,8 +1674,8 @@ END_TEST
 START_TEST(is_not_equal_8) {
     s21_decimal val1 = {{100, 0, 0, 0}};
     s21_decimal val2 = {{1000, 0, 0, 0}};
-    set_scale(&val1, 1);
-    set_scale(&val2, 2);
+    s21_set_scale(&val1, 1);
+    s21_set_scale(&val2, 2);
     ck_assert_int_eq(0, s21_is_not_equal(val1, val2));
 }
 END_TEST
@@ -1682,8 +1683,8 @@ END_TEST
 START_TEST(is_not_equal_9) {
     s21_decimal val1 = {{150, 0, 0, 0}};
     s21_decimal val2 = {{15, 0, 0, 0}};
-    set_scale(&val1, 2);
-    set_scale(&val2, 1);
+    s21_set_scale(&val1, 2);
+    s21_set_scale(&val2, 1);
     ck_assert_int_eq(0, s21_is_not_equal(val1, val2));
 }
 END_TEST
@@ -1691,8 +1692,8 @@ END_TEST
 START_TEST(is_not_equal_10) {
     s21_decimal val1 = {{151, 0, 0, 0}};
     s21_decimal val2 = {{15, 0, 0, 0}};
-    set_scale(&val1, 2);
-    set_scale(&val2, 1);
+    s21_set_scale(&val1, 2);
+    s21_set_scale(&val2, 1);
     ck_assert_int_eq(1, s21_is_not_equal(val1, val2));
 }
 END_TEST
@@ -1749,8 +1750,8 @@ END_TEST
 START_TEST(is_not_equal_18) {
     s21_decimal val1 = {{0, 0, 0, 0}};
     s21_decimal val2 = {{0, 0, 0, 0}};
-    set_sign(&val1, 1);
-    set_sign(&val2, 1);
+    s21_set_sign(&val1, 1);
+    s21_set_sign(&val2, 1);
     ck_assert_int_eq(0, s21_is_not_equal(val1, val2));
 }
 END_TEST
@@ -1772,8 +1773,8 @@ END_TEST
 START_TEST(is_not_equal_21) {
     s21_decimal val1 = {{5, 0, 0, 0}};
     s21_decimal val2 = {{5, 0, 0, 0}};
-    set_scale(&val1, 2);
-    set_scale(&val2, 1);
+    s21_set_scale(&val1, 2);
+    s21_set_scale(&val2, 1);
     ck_assert_int_eq(1, s21_is_not_equal(val1, val2));
 }
 END_TEST
@@ -1781,8 +1782,8 @@ END_TEST
 START_TEST(is_not_equal_22) {
     s21_decimal val1 = {{5, 0, 0, 0}};
     s21_decimal val2 = {{5, 0, 0, 0}};
-    set_scale(&val1, 1);
-    set_scale(&val2, 2);
+    s21_set_scale(&val1, 1);
+    s21_set_scale(&val2, 2);
     ck_assert_int_eq(1, s21_is_not_equal(val1, val2));
 }
 END_TEST
@@ -1811,8 +1812,8 @@ END_TEST
 START_TEST(is_not_equal_26) {
     s21_decimal val1 = {{10, 0, 0, 0}};
     s21_decimal val2 = {{100, 0, 0, ~(UINT_MAX / 2)}};
-    set_scale(&val1, 0);
-    set_scale(&val2, 1);
+    s21_set_scale(&val1, 0);
+    s21_set_scale(&val2, 1);
     ck_assert_int_eq(1, s21_is_not_equal(val1, val2));
 }
 END_TEST
@@ -1820,8 +1821,8 @@ END_TEST
 START_TEST(is_not_equal_27) {
     s21_decimal val1 = {{100, 0, 0, 0}};
     s21_decimal val2 = {{100, 0, 0, 0}};
-    set_scale(&val1, 1);
-    set_scale(&val2, 3);
+    s21_set_scale(&val1, 1);
+    s21_set_scale(&val2, 3);
     ck_assert_int_eq(1, s21_is_not_equal(val1, val2));
 }
 END_TEST
@@ -1829,8 +1830,8 @@ END_TEST
 START_TEST(is_not_equal_28) {
     s21_decimal val1 = {{1, 0, 0, 0}};
     s21_decimal val2 = {{1000000, 0, 0, 0}};
-    set_scale(&val1, 0);
-    set_scale(&val2, 6);
+    s21_set_scale(&val1, 0);
+    s21_set_scale(&val2, 6);
     ck_assert_int_eq(0, s21_is_not_equal(val1, val2));
 }
 END_TEST
@@ -1838,8 +1839,8 @@ END_TEST
 START_TEST(is_not_equal_29) {
     s21_decimal val1 = {{2, 0, 0, 0}};
     s21_decimal val2 = {{1000000, 0, 0, 0}};
-    set_scale(&val1, 0);
-    set_scale(&val2, 6);
+    s21_set_scale(&val1, 0);
+    s21_set_scale(&val2, 6);
     ck_assert_int_eq(1, s21_is_not_equal(val1, val2));
 }
 END_TEST
@@ -1847,8 +1848,8 @@ END_TEST
 START_TEST(is_not_equal_30) {
     s21_decimal val1 = {{149, 0, 0, ~(UINT_MAX / 2)}};
     s21_decimal val2 = {{15, 0, 0, ~(UINT_MAX / 2)}};
-    set_scale(&val1, 2);
-    set_scale(&val2, 1);
+    s21_set_scale(&val1, 2);
+    s21_set_scale(&val2, 1);
     ck_assert_int_eq(1, s21_is_not_equal(val1, val2));
 }
 END_TEST
@@ -1856,8 +1857,8 @@ END_TEST
 START_TEST(is_not_equal_31) {
     s21_decimal val1 = {{150, 0, 0, ~(UINT_MAX / 2)}};
     s21_decimal val2 = {{15, 0, 0, ~(UINT_MAX / 2)}};
-    set_scale(&val1, 2);
-    set_scale(&val2, 1);
+    s21_set_scale(&val1, 2);
+    s21_set_scale(&val2, 1);
     ck_assert_int_eq(0, s21_is_not_equal(val1, val2));
 }
 END_TEST
@@ -1879,8 +1880,8 @@ END_TEST
 START_TEST(is_not_equal_34) {
     s21_decimal val1 = {{12345, 0, 0, 0}};
     s21_decimal val2 = {{12345, 0, 0, 0}};
-    set_scale(&val1, 2);
-    set_scale(&val2, 3);
+    s21_set_scale(&val1, 2);
+    s21_set_scale(&val2, 3);
     ck_assert_int_eq(1, s21_is_not_equal(val1, val2));
 }
 END_TEST
@@ -1888,8 +1889,8 @@ END_TEST
 START_TEST(is_not_equal_35) {
     s21_decimal val1 = {{1, 0, 0, 0}};
     s21_decimal val2 = {{1, 0, 0, 0}};
-    set_scale(&val1, 28);
-    set_scale(&val2, 28);
+    s21_set_scale(&val1, 28);
+    s21_set_scale(&val2, 28);
     ck_assert_int_eq(0, s21_is_not_equal(val1, val2));
 }
 END_TEST
@@ -1897,8 +1898,8 @@ END_TEST
 START_TEST(is_not_equal_36) {
     s21_decimal val1 = {{123450, 0, 0, 0}};
     s21_decimal val2 = {{12345, 0, 0, 0}};
-    set_scale(&val1, 3);
-    set_scale(&val2, 2);
+    s21_set_scale(&val1, 3);
+    s21_set_scale(&val2, 2);
     ck_assert_int_eq(0, s21_is_not_equal(val1, val2));
 }
 END_TEST
@@ -1906,8 +1907,8 @@ END_TEST
 START_TEST(is_not_equal_37) {
     s21_decimal val1 = {{0x99999999, 0x99999999, 0x19999999, 0}};
     s21_decimal val2 = {{0x99999999, 0x99999999, 0x19999999, 0}};
-    set_scale(&val1, 5);
-    set_scale(&val2, 10);
+    s21_set_scale(&val1, 5);
+    s21_set_scale(&val2, 10);
     ck_assert_int_eq(1, s21_is_not_equal(val1, val2));
 }
 END_TEST
@@ -1922,8 +1923,8 @@ END_TEST
 START_TEST(is_not_equal_39) {
     s21_decimal val1 = {{555, 0, 0, 0}};
     s21_decimal val2 = {{555, 0, 0, 0}};
-    set_scale(&val1, 2);
-    set_scale(&val2, 2);
+    s21_set_scale(&val1, 2);
+    s21_set_scale(&val2, 2);
     ck_assert_int_eq(0, s21_is_not_equal(val1, val2));
 }
 END_TEST
@@ -1931,13 +1932,13 @@ END_TEST
 START_TEST(is_not_equal_40) {
     s21_decimal val1 = {{555, 0, 0, 0}};
     s21_decimal val2 = {{556, 0, 0, 0}};
-    set_scale(&val1, 2);
-    set_scale(&val2, 2);
+    s21_set_scale(&val1, 2);
+    s21_set_scale(&val2, 2);
     ck_assert_int_eq(1, s21_is_not_equal(val1, val2));
 }
 END_TEST
 
-Suite* s21_decimal_suite(void) {
+Suite* s21_add_ashlyuad_suite(void) {
     Suite* suite = suite_create("s21_decimal");
     
     TCase *tc_sub = tcase_create("tc_sub");

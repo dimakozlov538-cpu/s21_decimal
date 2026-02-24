@@ -126,8 +126,8 @@ START_TEST(test_float_null_pointer) {
 }
 END_TEST
 
-Suite *conversion_suite(void) {
-    Suite *s = suite_create("Conversion");
+Suite *s21_add_conversion_suite(void) {
+    Suite *s = suite_create("S21_CONVERSION_SUITE");
     TCase *tc_int = tcase_create("to_int");
     TCase *tc_float = tcase_create("to_float");
 
