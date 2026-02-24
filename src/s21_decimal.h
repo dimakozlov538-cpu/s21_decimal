@@ -8,16 +8,16 @@
 
 /* === Типы данных === */
 typedef struct {
-    int bits[4];
+  int bits[4];
 } s21_decimal;
 
 /* === Коды возврата арифметических операций === */
 typedef enum s21_arithmetic_result {
-    S21_ARITHMETIC_OK = 0,
-    S21_ARITHMETIC_BIG = 1,
-    S21_ARITHMETIC_SMALL = 2,
-    S21_ARITHMETIC_ZERO_DIV = 3,
-    S21_ARITHMETIC_ERROR = 4
+  S21_ARITHMETIC_OK = 0,
+  S21_ARITHMETIC_BIG = 1,
+  S21_ARITHMETIC_SMALL = 2,
+  S21_ARITHMETIC_ZERO_DIV = 3,
+  S21_ARITHMETIC_ERROR = 4
 } s21_arithmetic_result;
 
 /* === Арифметические операции === */

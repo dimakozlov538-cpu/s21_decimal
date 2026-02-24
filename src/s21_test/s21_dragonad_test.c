@@ -5,10 +5,10 @@
 #include "s21_decimal.h"
 #include "s21_decimal/s21_utility/s21_decimal_extended.h"
 
-// === Константы для тестов (вместо макросов, чтобы избежать -Wmissing-braces) ===
+// === Константы для тестов (вместо макросов, чтобы избежать -Wmissing-braces)
+// ===
 static const s21_decimal S21_DECIMAL_INF = {
-    .bits = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x7FFFFFFF}
-};
+    .bits = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x7FFFFFFF}};
 
 // Вспомогательная функция для создания decimal
 static s21_decimal make_decimal(unsigned int b0, unsigned int b1,

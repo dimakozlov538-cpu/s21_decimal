@@ -1,9 +1,9 @@
 #ifndef S21_DECIMAL_EXTENDED_H
 #define S21_DECIMAL_EXTENDED_H
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <stdbool.h>
 
 #include "s21_decimal.h"
 
@@ -25,7 +25,7 @@ void s21_set_sign(s21_decimal* value, s21_sign sign);
 s21_size s21_get_scale(const s21_decimal* value);
 void s21_set_scale(s21_decimal* value, s21_size scale);
 bool s21_is_zero(const s21_decimal* value);
-    
+
 uint32_t s21_divide_by_10(s21_decimal* value);
 void s21_reduce_scale(s21_decimal* value, s21_size scale, bool* has_fraction,
                       uint32_t* last_digit);

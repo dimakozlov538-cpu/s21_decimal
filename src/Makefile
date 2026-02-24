@@ -33,8 +33,6 @@ $(TARGET_LIB): $(LIB_OBJ)
 	ar rcs $@ $?
 
 test: $(TARGET_TESTS)
-
-run_tests: $(TARGET_TESTS)
 	@./$<
 
 $(TARGET_TESTS) : $(TESTS_OBJ) $(TARGET_LIB)
