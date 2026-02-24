@@ -3,6 +3,7 @@
 #include <stddef.h>
 
 #include "s21_decimal.h"
+#include "s21_decimal/s21_helper/s21_helper.h"
 
 // ========================
 // TEST DATA
@@ -59,7 +60,7 @@ END_TEST
 // ========================
 // SUITE
 // ========================
-Suite* int_to_decimal_suite(void) {
+Suite* s21_add_int_to_decimal_suite(void) {
     Suite* s = suite_create("S21_FROM_INT_TO_DECIMAL SUITE");
 
     TCase* tc_valid = tcase_create("s21_from_int_to_decimal: Valid data");

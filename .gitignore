@@ -65,3 +65,4 @@ lcov_out/
 s21_tests
 s21_tests_coverage
 s21_coverage.info
+trash*
