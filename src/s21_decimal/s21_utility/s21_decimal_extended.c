@@ -6,15 +6,19 @@
 #define S21_MAX_WORDS 4
 
 static int s21_get_bit_from_int(int value, s21_size nth) {
-  return (value >> nth) & 1;
+  return (int)(((uint32_t)value >> nth) & 1u);
 }
 
 static void s21_set_bit_from_int(int* value, s21_size nth) {
-  *value |= (1u << nth);
+  uint32_t tmp = (uint32_t)*value;
+  tmp |= (1u << nth);
+  *value = (int)tmp;
 }
 
 static void s21_unset_bit_from_int(int* value, s21_size nth) {
-  *value &= ~(1u << nth);
+  uint32_t tmp = (uint32_t)*value;
+  tmp &= ~(1u << nth);
+  *value = (int)tmp;
 }
 
 static s21_size s21_resolve_nth_word(s21_size nth) {
@@ -67,7 +71,7 @@ void s21_set_sign(s21_decimal* value, s21_sign sign) {
 }
 
 s21_size s21_get_scale(const s21_decimal* value) {
-  return (s21_size)((value->bits[3u] >> 16u) & 0xFFu);
+  return (s21_size)(((uint32_t)value->bits[3u] >> 16u) & 0xFFu);
 }
 
 void s21_set_scale(s21_decimal* value, s21_size scale) {
