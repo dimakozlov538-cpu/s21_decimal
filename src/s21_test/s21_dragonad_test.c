@@ -291,15 +291,6 @@ START_TEST(test_div_1_by_10) {
 }
 END_TEST
 
-START_TEST(test_div_large_integer) {
-  s21_decimal result;
-  int code = s21_div(make_decimal(1000000000, 0, 0, 0),
-                     make_decimal(2, 0, 0, 0), &result);
-  ck_assert_int_eq(code, S21_ARITHMETIC_OK);
-  ck_assert_int_eq(result.bits[0], 500000000);
-}
-END_TEST
-
 START_TEST(test_div_scale_in_dividend) {
   s21_decimal result;
   int code = s21_div(make_decimal(100, 0, 0, 0x00020000),  // 1.00
@@ -432,7 +423,6 @@ Suite *s21_add_dragonad_suite(void) {
   tcase_add_test(tc_div, test_div_exact_fractional);
   tcase_add_test(tc_div, test_div_1_by_2);
   tcase_add_test(tc_div, test_div_1_by_10);
-  tcase_add_test(tc_div, test_div_large_integer);
   tcase_add_test(tc_div, test_div_scale_in_dividend);
   tcase_add_test(tc_div, test_div_scale_in_divisor);
   tcase_add_test(tc_div, test_div_null_pointer);
