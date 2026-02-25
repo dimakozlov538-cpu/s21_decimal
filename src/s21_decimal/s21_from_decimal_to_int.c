@@ -1,44 +1,49 @@
-#include <limits.h>
+#include "s21_decimal.h"
 #include <math.h>
 #include <stdlib.h>
-
-#include "s21_decimal.h"
+#include <limits.h>
 
 int s21_from_decimal_to_int(s21_decimal src, int *dst) {
-  int status = 0;
+    if (!dst)
+        return 1;
 
-  if (dst == NULL) {
-    status = 1;
-  } else {
-    unsigned int bits3 = src.bits[3];
-    int scale = (bits3 >> 16) & 0xFF;
-    int sign = (bits3 >> 31) & 1;
+    int error = 0;
+    *dst = 0;
 
-    if (scale > 28) {
-      status = 1;
-      *dst = 0;
-    } else {
-      double mantissa = (double)src.bits[0] + ldexp((double)src.bits[1], 32) +
-                        ldexp((double)src.bits[2], 64);
+    int scale = (src.bits[3] >> 16) & 0xFF;
+    int sign = (src.bits[3] >> 31) & 1;
 
-      static const double pow10[] = {
-          1e0,  1e1,  1e2,  1e3,  1e4,  1e5,  1e6,  1e7,  1e8,  1e9,
-          1e10, 1e11, 1e12, 1e13, 1e14, 1e15, 1e16, 1e17, 1e18, 1e19,
-          1e20, 1e21, 1e22, 1e23, 1e24, 1e25, 1e26, 1e27, 1e28};
+    if (scale > 28)
+        error = 1;
 
-      mantissa /= pow10[scale];
+    unsigned int lo = src.bits[0];
+    unsigned int mid = src.bits[1];
+    unsigned int hi = src.bits[2];
 
-      if (sign) {
-        mantissa = -mantissa;
-      }
+    if (!error) {
+        for (int i = 0; i < scale; i++) {
+            unsigned long long temp;
 
-      if (mantissa > (double)INT_MAX || mantissa < (double)INT_MIN) {
-        status = 1;
-      } else {
-        *dst = (int)mantissa;
-      }
+            temp = hi % 10;
+            hi /= 10;
+
+            temp = (temp << 32) | mid;
+            mid = temp / 10;
+            temp %= 10;
+
+            temp = (temp << 32) | lo;
+            lo = temp / 10;
+        }
+
+        if (hi != 0)
+            error = 1;
+
+        if (!error && lo > (unsigned int)INT_MAX + sign)
+            error = 1;
+
+        if (!error)
+            *dst = sign ? -(int)lo : (int)lo;
     }
-  }
 
-  return status;
+    return error;
 }
