@@ -1,0 +1,14 @@
+
+cat > .gitignore <<EOF
+*.o
+*.a
+*.out
+build/
+*.gcda
+*.gcno
+*.gcov
+coverage.info
+gcov_report/
+coverage_report/
+.vscode/
+EOF
